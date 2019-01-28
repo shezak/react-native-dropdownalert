@@ -71,16 +71,20 @@ export default class DropdownAlert extends Component {
     warnImageSrc: require('./assets/warn.png'),
     errorImageSrc: require('./assets/error.png'),
     successImageSrc: require('./assets/success.png'),
+    smashdocsImageSrc: require('./assets/warning.png'),
     cancelBtnImageSrc: require('./assets/cancel.png'),
     infoColor: '#2B73B6',
     warnColor: '#cd853f',
     errorColor: '#cc3232',
     successColor: '#32A54A',
+    smashdocsColor: '#FFFFFF',
     showCancel: false,
     tapToCloseEnabled: true,
     panResponderEnabled: true,
     replaceEnabled: true,
     wrapperStyle: null,
+    titleCustomStyle: {},
+    messageCustomStyle: {},
     containerStyle: {
       padding: 16,
       flexDirection: 'row',
@@ -163,6 +167,7 @@ export default class DropdownAlert extends Component {
       ERROR: 'error',
       SUCCESS: 'success',
       CUSTOM: 'custom',
+      SMASHDOCS: 'smashdocs',
     };
   }
   componentDidMount() {
@@ -373,6 +378,8 @@ export default class DropdownAlert extends Component {
         return [StyleSheet.flatten(defaultContainer), { backgroundColor: this.props.errorColor }];
       case this.types.SUCCESS:
         return [StyleSheet.flatten(defaultContainer), { backgroundColor: this.props.successColor }];
+      case this.types.SMASHDOCS:
+        return [StyleSheet.flatten(defaultContainer), { backgroundColor: this.props.smashdocsColor }];
       default:
         return [StyleSheet.flatten(defaultContainer), StyleSheet.flatten(this.props.containerStyle)];
     }
@@ -387,6 +394,8 @@ export default class DropdownAlert extends Component {
         return this.props.errorImageSrc;
       case this.types.SUCCESS:
         return this.props.successImageSrc;
+      case this.types.SMASHDOCS:
+        return this.props.smashdocsImageSrc;
       default:
         return this.props.imageSrc;
     }
@@ -401,6 +410,8 @@ export default class DropdownAlert extends Component {
         return this.props.errorColor;
       case this.types.SUCCESS:
         return this.props.successColor;
+      case this.types.SMASHDOCS:
+        return this.props.smashdocsColor;
       default:
         return this.props.containerStyle.backgroundColor;
     }
@@ -437,14 +448,26 @@ export default class DropdownAlert extends Component {
       return this.props.renderTitle(this.props, this.state);
     }
     const { titleTextProps, titleStyle, titleNumOfLines } = this.props;
-    return <Label {...titleTextProps} style={StyleSheet.flatten(titleStyle)} numberOfLines={titleNumOfLines} text={this.state.title} />;
+
+    let titleCustomStyle = {};
+    if(this.state.type==='smashdocs'){
+      titleCustomStyle = this.props.titleCustomStyle;
+    }
+
+    return <Label {...titleTextProps} style={StyleSheet.flatten([titleStyle, titleCustomStyle])} numberOfLines={titleNumOfLines} text={this.state.title} />;
   }
   renderMessage() {
     if (this.props.renderMessage) {
       return this.props.renderMessage(this.props, this.state);
     }
     const { messageTextProps, messageStyle, messageNumOfLines } = this.props;
-    return <Label {...messageTextProps} style={StyleSheet.flatten(messageStyle)} numberOfLines={messageNumOfLines} text={this.state.message} />;
+
+    let messageCustomStyle = {};
+    if(this.state.type==='smashdocs'){
+      messageCustomStyle = this.props.messageCustomStyle;
+    }
+
+    return <Label {...messageTextProps} style={StyleSheet.flatten([messageStyle, messageCustomStyle])} numberOfLines={messageNumOfLines} text={this.state.message} />;
   }
   render() {
     const { isOpen, type } = this.state;
