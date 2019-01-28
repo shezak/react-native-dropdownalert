@@ -58,6 +58,7 @@ export interface DropdownAlertProps {
     | 'error'
     | 'custom'
     | 'success'
+    | 'smashdocs'
   export default class DropdownAlert extends React.Component<
     DropdownAlertProps
   > {
