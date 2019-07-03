@@ -86,32 +86,43 @@ export default class DropdownAlert extends Component {
     titleCustomStyle: {},
     messageCustomStyle: {},
     containerStyle: {
-      padding: 16,
+      padding: 13,
+      paddingVertical: 8,
       flexDirection: 'row',
     },
     safeAreaStyle: {
       flexDirection: 'row',
       flex: 1,
     },
+    safeAreaStyleWrap: {
+      flexDirection: 'row',
+      flex: 1,
+      paddingVertical: 13,
+    },
     titleStyle: {
-      fontSize: 16,
+      fontSize: 20,
       textAlign: 'left',
       fontWeight: 'bold',
       color: 'white',
+      lineHeight: 21,
       backgroundColor: 'transparent',
     },
     messageStyle: {
       fontSize: 14,
+      lineHeight: 17,
       textAlign: 'left',
       fontWeight: 'normal',
       color: 'white',
       backgroundColor: 'transparent',
+      paddingVertical: 2,
     },
     imageStyle: {
-      padding: 8,
+      padding: 0,
       width: DEFAULT_IMAGE_DIMENSIONS,
       height: DEFAULT_IMAGE_DIMENSIONS,
-      alignSelf: 'center',
+      alignSelf: 'flex-start',
+      marginTop: -3,
+      //backgroundColor: "red",
     },
     cancelBtnImageStyle: {
       padding: 8,
@@ -120,13 +131,14 @@ export default class DropdownAlert extends Component {
       alignSelf: 'center',
     },
     defaultContainer: {
-      padding: 8,
-      paddingTop: IS_ANDROID ? 0 : 20,
+      padding: 13,
+      paddingVertical: 0,
       flexDirection: 'row',
     },
     defaultTextContainer: {
       flex: 1,
-      padding: 8,
+      padding: 0,
+      paddingHorizontal: 11,
     },
     translucent: false,
     activeStatusBarStyle: 'light-content',
@@ -454,7 +466,11 @@ export default class DropdownAlert extends Component {
       titleCustomStyle = this.props.titleCustomStyle;
     }
 
-    return <Label {...titleTextProps} style={StyleSheet.flatten([titleStyle, titleCustomStyle])} numberOfLines={titleNumOfLines} text={this.state.title} />;
+    if(this.state.title!==""){
+      return <Label {...titleTextProps} style={StyleSheet.flatten([titleStyle, titleCustomStyle])} numberOfLines={titleNumOfLines} text={this.state.title} />;
+    } else {
+      return null;
+    }
   }
   renderMessage() {
     if (this.props.renderMessage) {
@@ -467,7 +483,11 @@ export default class DropdownAlert extends Component {
       messageCustomStyle = this.props.messageCustomStyle;
     }
 
-    return <Label {...messageTextProps} style={StyleSheet.flatten([messageStyle, messageCustomStyle])} numberOfLines={messageNumOfLines} text={this.state.message} />;
+    if(this.state.message!==""){
+      return <Label {...messageTextProps} style={StyleSheet.flatten([messageStyle, messageCustomStyle, this.state.title!==""?{marginTop:8}:null])} numberOfLines={messageNumOfLines} text={this.state.message} />;
+    } else {
+      return null;
+    }
   }
   render() {
     const { isOpen, type } = this.state;
@@ -520,10 +540,12 @@ export default class DropdownAlert extends Component {
           >
             <View style={style}>
               <SafeAreaView style={StyleSheet.flatten(this.props.safeAreaStyle)}>
-                {this.renderImage(source)}
-                <View style={StyleSheet.flatten(this.props.defaultTextContainer)}>
-                  {this.renderTitle()}
-                  {this.renderMessage()}
+                <View style={StyleSheet.flatten(this.props.safeAreaStyleWrap)}>
+                  {this.renderImage(source)}
+                  <View style={StyleSheet.flatten(this.props.defaultTextContainer)}>
+                    {this.renderTitle()}
+                    {this.renderMessage()}
+                  </View>
                 </View>
               </SafeAreaView>
               {this.renderCancel(showCancel)}
